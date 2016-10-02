@@ -1,0 +1,152 @@
+[
+  {
+    "type": "binary operation",
+    "properties": [
+      {
+        "name": "operator",
+        "type": "string"
+      },
+      {
+        "name": "left",
+        "type": "any"
+      },
+      {
+        "name": "right",
+        "type": "any"
+      }
+    ],
+    "description": {
+      "$sType": "comments",
+      "text": "A binary operation: <left> <operator> <right>."
+    }
+  },
+  {
+    "type": "comments",
+    "properties": [
+      {
+        "name": "text",
+        "type": "string"
+      }
+    ],
+    "description": {
+      "$sType": "comments",
+      "text": "Simple comments."
+    }
+  },
+  {
+    "type": "function application",
+    "properties": [
+      {
+        "name": "function",
+        "type": "any"
+      },
+      {
+        "name": "arguments",
+        "type": "any",
+        "stringMap": true
+      }
+    ],
+    "description": {
+      "$sType": "comments",
+      "text": "Application of any function, explicitly referenced or anonymously defined in line."
+    }
+  },
+  {
+    "type": "function definition",
+    "properties": [
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "parameters",
+        "type": "string",
+        "stringMap": true
+      },
+      {
+        "name": "returnType",
+        "type": "string",
+        "optional": true
+      },
+      {
+        "name": "body",
+        "type": "any"
+      }
+    ],
+    "description": {
+      "$sType": "comments",
+      "text": "Definition of a named function. The function is available for program contents _after_ the definition."
+    }
+  },
+  {
+    "type": "function reference",
+    "properties": [
+      {
+        "name": "name",
+        "type": "string"
+      }
+    ],
+    "description": {
+      "$sType": "comments",
+      "text": "A reference to named function defined _before_ the reference."
+    }
+  },
+  {
+    "type": "if-then-else",
+    "properties": [
+      {
+        "name": "condition",
+        "type": "any"
+      },
+      {
+        "name": "trueBranch",
+        "type": "any"
+      },
+      {
+        "name": "falseBranch",
+        "type": "any"
+      }
+    ],
+    "description": {
+      "$sType": "comments",
+      "text": "A ternary operation: if (<condition>) then <trueBranch> else <elseBranch>."
+    }
+  },
+  {
+    "type": "issue",
+    "properties": [
+      {
+        "name": "message",
+        "type": "string"
+      },
+      {
+        "name": "object",
+        "type": "Object",
+        "optional": true
+      },
+      {
+        "name": "causedBy",
+        "type": "issue",
+        "ownType": true,
+        "optional": true
+      }
+    ],
+    "description": {
+      "$sType": "comments",
+      "text": "An issue caused by deeper evaluation. <object> can optionally contain the offending object causing the issue."
+    }
+  },
+  {
+    "type": "value reference",
+    "properties": [
+      {
+        "name": "name",
+        "type": "string"
+      }
+    ],
+    "description": {
+      "$sType": "comments",
+      "text": "A reference to a value defined in the context, e.g. an argument value."
+    }
+  }
+]

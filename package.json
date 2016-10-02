@@ -1,0 +1,31 @@
+{
+  "name": "evanjs",
+  "version": "0.1.0",
+  "description": "",
+  "main": "lib/index.js",
+  "dependencies": {
+    "indent-string": "^3.0.0",
+    "is-integer": "^1.0.6",
+    "xtend": "^4.0.1"
+  },
+  "devDependencies": {
+    "glob": "^7.1.0",
+    "ndjson": "^1.4.3",
+    "split2": "^2.1.0",
+    "tape": "^4.6.2",
+    "typescript": "^2.0.3"
+  },
+  "scripts": {
+    "test": "npm run build && tape lib/test/*.js",
+    "clean": "rm -fr lib/*",
+    "build": "npm run clean && tsc",
+    "watch": "npm run clean && tsc --watch",
+    "prepublish": "npm run test && rm -fr lib/test"
+  },
+  "keywords": [
+    "evan",
+    "evan-lang",
+    "meta-model"
+  ],
+  "license": "ISC"
+}

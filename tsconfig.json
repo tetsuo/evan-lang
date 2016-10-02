@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "outDir": "lib"
+  },
+  "files": [
+    "src/index.ts",
+    "src/semantics-builder.ts",
+    "src/template.ts",
+    "src/test/metamodel.ts"
+  ]
+}
