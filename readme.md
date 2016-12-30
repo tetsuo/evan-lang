@@ -28,13 +28,13 @@ Note that you can use `yarn` instead of `npm` everywhere, although the scripts i
 
 ## Documentation
 
-All other documentation you can find under [`documentation/`](./documentation).
+All other docs you can find under [`docs/`](./docs).
 Right now, the menu offers the following selection of dishes:
 
-* [How to contribute](./documentation/Contributing.md)
-* [TODOs that form a short-term roadmap of sorts](./documentation/TODO.md)
-* [A primordial design](./documentation/Design.md)
-* [The _External Objects_ mechanism](./documentation/ExternalObjects.md)
+* [How to contribute](./docs/contributing.md)
+* [TODOs that form a short-term roadmap of sorts](./docs/todo.md)
+* [A primordial design](./docs/design.md)
+* [The _External Objects_ mechanism](./docs/external-objects.md)
 
 
 ## About the name
