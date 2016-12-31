@@ -21,6 +21,8 @@
   "bin": {
     "evan": "lib/bin/cmd.js"
   },
+  "main": "lib/index.js",
+  "typings": "lib/index",
   "license": "MIT",
   "dependencies": {
     "indent-string": "^3.0.0",

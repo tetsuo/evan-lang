@@ -2,14 +2,12 @@ import {makeIssue, isIssue} from "./issues";
 import {util, isSemanticsTyped} from "./metamodel";
 import * as sTypes from "./latest";
 
-type Dictionary = { [name: string]: any };
-
-export function evaluate(json: any, objectTable: Dictionary = {}): any {
+export function evaluate(json: any, objectTable: util.IDictionary = {}): any {
 	return polyEval(json, {}, {}, objectTable);
 }
 
 // Note: arguments are ordered left-to-right from "entirely local" to "entirely global".
-export function polyEval(json: any, values: Dictionary, functionTable: Dictionary, objectTable: Dictionary): any {
+export function polyEval(json: any, values: util.IDictionary, functionTable: util.IDictionary, objectTable: util.IDictionary): any {
 	if (util.isArrayLike(json)) {
 		return (json as any[]).map(item => polyEval(item, values, functionTable, objectTable));
 	}
@@ -43,10 +41,10 @@ export function polyEval(json: any, values: Dictionary, functionTable: Dictionar
 
 export namespace evaluators {
 
-	type Evaluator = (json: any, values: Dictionary, functionTable: Dictionary, objectTable: Dictionary) => any;
+	export type Evaluator = (json: any, values: util.IDictionary, functionTable: util.IDictionary, objectTable: util.IDictionary) => any;
 
 	export function evaluateBinaryOperation(
-		operation: sTypes.IBinaryOperation, values: Dictionary, functionTable: Dictionary, objectTable: Dictionary, polyEval: Evaluator
+		operation: sTypes.IBinaryOperation, values: util.IDictionary, functionTable: util.IDictionary, objectTable: util.IDictionary, polyEval: Evaluator
 	): any {
 		const leftEval = polyEval(operation.left, values, functionTable, objectTable);
 		const rightEval = polyEval(operation.right, values, functionTable, objectTable);
@@ -63,14 +61,14 @@ export namespace evaluators {
 	}
 
 	export function evaluateFunctionApplication(
-		call: sTypes.IFunctionApplication, values: Dictionary, functionTable: Dictionary, objectTable: Dictionary, polyEval: Evaluator
+		call: sTypes.IFunctionApplication, values: util.IDictionary, functionTable: util.IDictionary, objectTable: util.IDictionary, polyEval: Evaluator
 	): any {
 		const definition = polyEval(call.function, values, functionTable, objectTable);
 		if (definition === undefined || !isSemanticsTyped(definition) || definition.$sType !== "function definition") {
 			return makeIssue(`Function does not resolve to function definition`, definition);
 		}
 		// TODO  check arguments against parameters
-		const newValues: Dictionary = {};
+		const newValues: util.IDictionary = {};
 		for (let parameterName in definition.parameters) {
 			const argEval = polyEval(call.arguments[parameterName], values, functionTable, objectTable);
 			newValues[parameterName] = argEval;
@@ -79,7 +77,7 @@ export namespace evaluators {
 	}
 
 	export function evaluateFunctionReference(
-		call: sTypes.IFunctionReference, functionTable: Dictionary
+		call: sTypes.IFunctionReference, functionTable: util.IDictionary
 	): sTypes.IFunctionDefinition | sTypes.IIssue | void {
 		if (!call.name || !util.isString(call.name)) {
 			return makeIssue(`Function reference has no name.`, call);
@@ -88,7 +86,7 @@ export namespace evaluators {
 	}
 
 	export function evaluateFunctionDefinition(
-		definition: sTypes.IFunctionDefinition, functionTable: Dictionary
+		definition: sTypes.IFunctionDefinition, functionTable: util.IDictionary
 	): sTypes.IIssue | void {
 		const {name} = definition;
 		if (!name || !util.isString(name)) {
@@ -103,7 +101,7 @@ export namespace evaluators {
 	}
 
 	export function evaluateIfThenElse(
-		ifThenElse: sTypes.IIfThenElse, values: Dictionary, functionTable: Dictionary, objectTable: Dictionary, polyEval: Evaluator
+		ifThenElse: sTypes.IIfThenElse, values: util.IDictionary, functionTable: util.IDictionary, objectTable: util.IDictionary, polyEval: Evaluator
 	): any {
 		if (!ifThenElse.condition || !ifThenElse.trueBranch || !ifThenElse.falseBranch) {
 			return makeIssue(`If-then-else object not complete.`, ifThenElse);
@@ -121,7 +119,7 @@ export namespace evaluators {
 	}
 
 	export function evaluateObjectFunctionInvocation(
-		objectFunctionInvocation: sTypes.IObjectFunctionInvocation, values: Dictionary, functionTable: Dictionary, objectTable: Dictionary, polyEval: Evaluator
+		objectFunctionInvocation: sTypes.IObjectFunctionInvocation, values: util.IDictionary, functionTable: util.IDictionary, objectTable: util.IDictionary, polyEval: Evaluator
 	): any {
 		const objectName = objectFunctionInvocation.object;
 		if (!(objectName in objectTable)) {
@@ -148,7 +146,7 @@ export namespace evaluators {
 	}
 
 	export function evaluateValueReference(
-		valueRef: sTypes.IValueReference, values: Dictionary
+		valueRef: sTypes.IValueReference, values: util.IDictionary
 	): any {
 		const {name} = valueRef;
 		return name && util.isString(name) && (name in values)

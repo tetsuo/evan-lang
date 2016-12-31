@@ -213,6 +213,8 @@ export namespace util {
 				&& x.constructor.name === "ObservableArray");
 	}
 
+	export type IDictionary = { [name: string]: any };
+
 } /* util */
 
 const tag = template.tag;
