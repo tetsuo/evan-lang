@@ -1,10 +1,6 @@
-import {isBoolean, isFunction, isObject, isString} from "lodash";
-import {isArrayLike} from "mobx";
-
-import {makeIssue, isIssue} from "../core/issues-util";
-import * as sTypes from "../core/semantics-types_gen";
-import {isSemanticsTyped} from "../meta/meta-model";
-
+import {makeIssue, isIssue} from "./issues";
+import {util, isSemanticsTyped} from "./metamodel";
+import * as sTypes from "./latest";
 
 type Dictionary = { [name: string]: any };
 
@@ -13,11 +9,11 @@ export function evaluate(json: any, objectTable: Dictionary = {}): any {
 }
 
 // Note: arguments are ordered left-to-right from "entirely local" to "entirely global".
-function polyEval(json: any, values: Dictionary, functionTable: Dictionary, objectTable: Dictionary): any {
-	if (isArrayLike(json)) {
+export function polyEval(json: any, values: Dictionary, functionTable: Dictionary, objectTable: Dictionary): any {
+	if (util.isArrayLike(json)) {
 		return (json as any[]).map(item => polyEval(item, values, functionTable, objectTable));
 	}
-	if (isObject(json)) {
+	if (util.isObject(json)) {
 		if (isSemanticsTyped(json)) {
 			const object = json as sTypes.SemanticsTyped;
 			switch (object.$sType) {
@@ -85,7 +81,7 @@ export namespace evaluators {
 	export function evaluateFunctionReference(
 		call: sTypes.IFunctionReference, functionTable: Dictionary
 	): sTypes.IFunctionDefinition | sTypes.IIssue | void {
-		if (!call.name || !isString(call.name)) {
+		if (!call.name || !util.isString(call.name)) {
 			return makeIssue(`Function reference has no name.`, call);
 		}
 		return functionTable[call.name];
@@ -95,7 +91,7 @@ export namespace evaluators {
 		definition: sTypes.IFunctionDefinition, functionTable: Dictionary
 	): sTypes.IIssue | void {
 		const {name} = definition;
-		if (!name || !isString(name)) {
+		if (!name || !util.isString(name)) {
 			return makeIssue(`Function definition lacks string-valued name field.`, definition);
 		}
 		if (name in functionTable) {
@@ -113,7 +109,7 @@ export namespace evaluators {
 			return makeIssue(`If-then-else object not complete.`, ifThenElse);
 		}
 		const conditionEval = polyEval(ifThenElse.condition, values, functionTable, objectTable);
-		if (isBoolean(conditionEval)) {
+		if (util.isBoolean(conditionEval)) {
 			return polyEval(conditionEval ? ifThenElse.trueBranch : ifThenElse.falseBranch, values, functionTable, objectTable);
 		} else {
 			const issue = makeIssue(`Condition of if-then-else does not evaluate to boolean.`, ifThenElse);
@@ -136,7 +132,7 @@ export namespace evaluators {
 			return makeIssue(`Object '${objectName}' has no function '${functionName}'.`, objectFunctionInvocation);
 		}
 		const func = objectTable[objectName][functionName];
-		if (!isFunction(func)) {
+		if (!util.isFunction(func)) {
 			return makeIssue(`Property '${functionName}' of '${objectName}' is not a function.`, objectFunctionInvocation);
 		}
 		const argumentValues: any[] = [];
@@ -155,7 +151,7 @@ export namespace evaluators {
 		valueRef: sTypes.IValueReference, values: Dictionary
 	): any {
 		const {name} = valueRef;
-		return name && isString(name) && (name in values)
+		return name && util.isString(name) && (name in values)
 			? values[name]
 			: makeIssue(`"${name}" is not a valid name for a value reference.`);
 	}

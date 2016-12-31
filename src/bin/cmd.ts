@@ -1,4 +1,6 @@
+import * as path from "path";
 import * as minimist from "minimist";
+import * as evan from "../evan";
 import { SemanticsNode } from "../metamodel";
 
 const argv: any = minimist(process.argv.slice(2), {
@@ -8,7 +10,9 @@ const argv: any = minimist(process.argv.slice(2), {
 	}
 });
 
-if (argv.help) {
+const file: string = argv._[0];
+
+if (!file || argv.help) {
 	showUsage();
 } else if (argv.semantics) {
 	const data = require("../../latest.json");
@@ -19,7 +23,9 @@ if (argv.help) {
 	console.log("v" + require("../../package.json").version);
 	process.exit(0);
 } else {
-	showUsage();
+	const prog = require(path.resolve(file));
+	const out = evan.evaluate(prog);
+	console.dir(out, { depth: null, colors: true });
 }
 
 function showUsage() {

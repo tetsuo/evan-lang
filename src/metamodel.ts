@@ -159,44 +159,59 @@ export class SemanticsNode {
 
 export namespace template {
 
-export function tag(strings: any, ...keys: any[]) {
-	return (function(...values: any[]) {
-		const dict = values[values.length - 1] || {};
-		const result = [strings[0]];
+	export function tag(strings: any, ...keys: any[]) {
+		return (function(...values: any[]) {
+			const dict = values[values.length - 1] || {};
+			const result = [strings[0]];
 
-		keys.forEach((key, i) => {
-			const value = isInteger(key) ? values[key] : dict[key];
-			result.push(value, strings[i + 1]);
+			keys.forEach((key, i) => {
+				const value = isInteger(key) ? values[key] : dict[key];
+				result.push(value, strings[i + 1]);
+			});
+
+			return result.join("");
 		});
+	}
 
-		return result.join("");
-	});
-}
+	export function indent(s: string, n = 2, p = " ") {
+		return indentString(String(s), n, p);
+	}
 
-export function indent(s: string, n = 2, p = " ") {
-	return indentString(String(s), n, p);
-}
-
-export function capitalize(s: string) {
-	return s
-		.replace(/-/g, " ")
-		.replace(/\w\S*/g, res => {
-			return res.charAt(0).toUpperCase() + res.substr(1).toLowerCase();
-		})
-		.replace(/[\s\xa0]+/g, "");
-}
+	export function capitalize(s: string) {
+		return s
+			.replace(/-/g, " ")
+			.replace(/\w\S*/g, res => {
+				return res.charAt(0).toUpperCase() + res.substr(1).toLowerCase();
+			})
+			.replace(/[\s\xa0]+/g, "");
+	}
 
 } /* template */
 
 export namespace util {
 
-export function isObject(x: any) {
-	return typeof x === "object" && x !== null;
-}
+	export function isObject(x: any) {
+		return typeof x === "object" && x !== null;
+	}
 
-export function isString(x: any) {
-	return typeof x === "string";
-}
+	export function isString(x: any) {
+		return typeof x === "string";
+	}
+
+	export function isBoolean(x: any) {
+		return typeof x === "boolean";
+	}
+
+	export function isFunction(x: any) {
+		return typeof x === "function";
+	}
+
+	export function isArrayLike(x: any) {
+		return Array.isArray(x)
+			|| (util.isObject(x)
+				&& typeof x.constructor === "function"
+				&& x.constructor.name === "ObservableArray");
+	}
 
 } /* util */
 

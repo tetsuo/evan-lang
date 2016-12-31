@@ -16,7 +16,7 @@
         "target": "es5"
     },
     "files": [
-		"src/metamodel.ts",
+		"src/test/evan.ts",
 		"src/test/metamodel.ts",
 		"src/bin/cmd.ts"
     ]

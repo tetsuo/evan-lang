@@ -1,7 +1,5 @@
-import {isObject} from "lodash";
-
-import {IIssue} from "../core/semantics-types_gen";
-
+import {util} from "./metamodel";
+import {IIssue} from "./latest";
 
 export function makeIssue(message: string, object?: Object): IIssue {
 	const issue: IIssue = {
@@ -15,6 +13,5 @@ export function makeIssue(message: string, object?: Object): IIssue {
 }
 
 export function isIssue(object: any) {
-	return isObject(object) && object.$sType === "issue";
+	return util.isObject(object) && object.$sType === "issue";
 }
-
